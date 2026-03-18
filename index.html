@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+        </div>
+        <div class="content">
+            <h1>Hii, I am Vineet</h1>
+            <h3>
+                If you’re not me, then you probably stumbled upon this page through a link I intended for you to find. If that’s the case, it means I’m no longer with us, and I’ve chosen you to share the messages I wanted to leave for those whom I love and would like to leave some message for before I pass away. <br>
+                Click on the names of the people mentioned in the sidebar AFTER entering my DOB below, there will be some contact information and encrypted text (that is the message you need to give them along with the instructions to decode it). <br>Please send the encrypted text to the contact information I've provided. <br>Thanks if you have completed. It means a lot to me.
+            </h3>
+            <div>
+                <label for="dob">Enter DOB:</label>
+                <input type="date" name="dob" id="dob">
+            </div>
+            <div class="text"></div>
+        </div>
+    </div>
+</body>
+<script>
+    const OWNER = "itsvineetkr";
+    const REPO = "heho";
+    const PATH = ""; // "" = root, or "folder-name" if files are inside a folder
+
+    const API_URL = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}`;
+    const RAW_BASE = `https://raw.githubusercontent.com/${OWNER}/${REPO}/main/`;
+    let dob = '';
+    const dobInput = document.getElementById('dob');
+    dobInput.addEventListener('change', function() {
+        dob = document.getElementById('dob').value.replace(/-/g, '');
+    });
+
+    function decode(text, key, salt) {
+        key = key + salt;
+
+        let shifts = key.repeat(Math.floor(text.length / key.length)) +
+                    key.slice(0, text.length % key.length);
+
+        let result = "";
+
+        for (let i = 0; i < shifts.length; i++) {
+            let shift = parseInt(shifts[i]) + 1;
+            result += String.fromCharCode(text.charCodeAt(i) - shift);
+        }
+
+        return result;
+    }
+
+    fetch(API_URL)
+    .then(res => res.json())
+    .then(files => {
+        const sidebar = document.querySelector('.sidebar');
+
+        files
+        .filter(file => file.type === "file") // only files
+        .forEach(file => {
+            const button = document.createElement('button');
+            button.textContent = file.name;
+
+            button.onclick = () => {
+            fetch(RAW_BASE + file.path)
+                .then(res => res.text())
+                .then(content => {
+                document.querySelector('.text').textContent = decode(content, dob, "20041210");
+                });
+            };
+
+            sidebar.appendChild(button);
+        });
+    })
+    .catch(err => {
+        console.error("Error fetching files:", err);
+    });
+</script>
+</html>
