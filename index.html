@@ -61,6 +61,7 @@
         files
         .filter(file => file.type === "file") // only files
         .forEach(file => {
+            if (!file.name.endsWith('.txt')) return;
             const button = document.createElement('button');
             button.textContent = file.name;
 
