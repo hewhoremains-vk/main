@@ -1,6 +1,9 @@
+* {
+    font-family:'Courier New', Courier, monospace;
+}
+
 body {
-    font-family: 'Trebuchet MS', sans-serif;
-    background-color: #ffffff;
+    background-color: #e6e6e6;
     margin: 0;
 }
 
