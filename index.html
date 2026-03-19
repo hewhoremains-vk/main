@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>If I die</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -63,7 +63,7 @@
         .forEach(file => {
             if (!file.name.endsWith('.txt')) return;
             const button = document.createElement('button');
-            button.textContent = file.name;
+            button.textContent = file.name.replace('.txt', '');
 
             button.onclick = () => {
             fetch(RAW_BASE + file.path)
